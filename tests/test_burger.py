@@ -3,69 +3,50 @@ from praktikum.burger import Burger
 from praktikum.ingredient import Ingredient
 from praktikum.bun import Bun
 
-
-
 def test_get_price():
-    
     bun = Bun(name="Булочка", price=100)
-        
-    if Burger.__init__.__code__.co_argcount == 1:  
-        burger = Burger()
-        burger.bun = bun
-    else:
-        burger = Burger(bun)
-
+    burger = Burger(bun)
+    
     ingredient1 = Ingredient(name="Помидор", ingredient_type="овощ", price=20)
     ingredient2 = Ingredient(name="Сыр", ingredient_type="молочный", price=50)
 
     burger.add_ingredient(ingredient1)
     burger.add_ingredient(ingredient2)
     
-    expected_price = 100 * 2 + 20 + 50  
+    expected_price = 100 * 2 + 20 + 50
     assert burger.get_price() == expected_price, f"Неверная итоговая цена бургера. Ожидали {expected_price}, получили {burger.get_price()}"
 
 def test_add_ingredient():
+    bun = Bun(name="Булочка", price=100)
+    burger = Burger(bun)
     
-    if Burger.__init__.__code__.co_argcount == 1:
-        burger = Burger()
-        burger.bun = Bun(name="Булочка", price=100)
-    else:
-        burger = Burger(Bun(name="Булочка", price=100))
-
-
     ingredient = Ingredient(name="Салат", ingredient_type="зелень", price=15)
     burger.add_ingredient(ingredient)
 
     assert len(burger.ingredients) == 1, "Длина ingredients должна быть 1 после добавления"
     assert ingredient in burger.ingredients, "Ингредиент должен быть в ingredients"
+    assert burger.get_price() == 215, "Цена бургера должна увеличиться на цену ингредиента"
 
 def test_remove_ingredient():
+    bun = Bun(name="Булочка", price=100)
+    burger = Burger(bun)
     
-    if Burger.__init__.__code__.co_argcount == 1:
-        burger = Burger()
-        burger.bun = Bun(name="Булочка", price=100)
-    else:
-        burger = Burger(Bun(name="Булочка", price=100))
-
     ingredient = Ingredient(name="Огурец", ingredient_type="овощ", price=10)
     burger.add_ingredient(ingredient)
 
-    ingredient_index = burger.ingredients.index(ingredient)
-    burger.remove_ingredient(ingredient_index)
+    burger.remove_ingredient(0)  
 
     assert len(burger.ingredients) == 0, "ingredients должен быть пуст после удаления"
+    assert burger.get_price() == 200, "Цена должна вернуться к исходной после удаления"
 
 def test_move_ingredient():
+    bun = Bun(name="Булочка", price=100)
+    burger = Burger(bun)
     
-    if Burger.__init__.__code__.co_argcount == 1:
-        burger = Burger()
-        burger.bun = Bun(name="Булочка", price=100)
-    else:
-        burger = Burger(Bun(name="Булочка", price=100))
-
     ing1 = Ingredient(name="Котлета", ingredient_type="мясо", price=80)
     ing2 = Ingredient(name="Лук", ingredient_type="овощ", price=5)
     ing3 = Ingredient(name="Томат", ingredient_type="овощ", price=15)
+    
     burger.add_ingredient(ing1)
     burger.add_ingredient(ing2)
     burger.add_ingredient(ing3)
@@ -76,17 +57,13 @@ def test_move_ingredient():
     assert burger.ingredients[1] == ing3, "Второй ингредиент должен быть 'Томат'"
     assert burger.ingredients[2] == ing1, "Третий ингредиент должен быть 'Котлета'"
 
-
 def test_get_receipt():
+    bun = Bun(name="Булочка классическая", price=100)
+    burger = Burger(bun)
     
-    if Burger.__init__.__code__.co_argcount == 1:
-        burger = Burger()
-        burger.bun = Bun(name="Булочка классическая", price=100)
-    else:
-        burger = Burger(Bun(name="Булочка классическая", price=100))
-
     ingredient1 = Ingredient(name="Котлета", ingredient_type="мясо", price=80)
     ingredient2 = Ingredient(name="Салат", ingredient_type="зелень", price=15)
+    
     burger.add_ingredient(ingredient1)
     burger.add_ingredient(ingredient2)
 
@@ -99,3 +76,4 @@ def test_get_receipt():
     
     assert f'= мясо Котлета =' in lines, "Котлета не найдена в чеке"
     assert f'= зелень Салат =' in lines, "Салат не найден в чеке"
+
