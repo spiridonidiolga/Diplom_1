@@ -43,22 +43,52 @@ class TestBun:
         assert len(bun.ingredients) == 0, "После удаления ingredients должен быть пуст"
         assert bun.price == 150, "Цена должна вернуться к исходной после удаления"
 
-    def test_multiple_ingredients(self):
+    def test_add_single_ingredient(self):
+        bun = Bun(name="Многослойная", price=100)
+        ingredient = Mock()
+        ingredient.price = 20
+    
+        bun.add_ingredient(ingredient)
+    
+        assert len(bun.ingredients) == 1, "Должен быть добавлен один ингредиент"
+        assert bun.price == 120, "Цена должна увеличиться на цену ингредиента"
+
+    def test_add_multiple_ingredients(self):
         bun = Bun(name="Многослойная", price=100)
         ingredient1 = Mock()
         ingredient1.price = 20
         ingredient2 = Mock()
         ingredient2.price = 30
-        
+    
         bun.add_ingredient(ingredient1)
         bun.add_ingredient(ingredient2)
-        
+    
         assert len(bun.ingredients) == 2, "Должны быть добавлены оба ингредиента"
         assert bun.price == 150, "Цена должна увеличиться на сумму цен ингредиентов"
-        
+
+    def test_remove_ingredient(self):
+        bun = Bun(name="Многослойная", price=100)
+        ingredient = Mock()
+        ingredient.price = 20
+    
+        bun.add_ingredient(ingredient)
+        bun.remove_ingredient(ingredient)
+    
+        assert len(bun.ingredients) == 0, "После удаления ингредиент должен исчезнуть"
+        assert bun.price == 100, "Цена должна вернуться к исходной"
+
+    def test_remove_multiple_ingredients(self):
+        bun = Bun(name="Многослойная", price=100)
+        ingredient1 = Mock()
+        ingredient1.price = 20
+        ingredient2 = Mock()
+        ingredient2.price = 30
+    
+        bun.add_ingredient(ingredient1)
+        bun.add_ingredient(ingredient2)
         bun.remove_ingredient(ingredient1)
-        
-        assert len(bun.ingredients) == 1, "После удаления должен остаться один ингредиент"
+    
+        assert len(bun.ingredients) == 1, "Должен остаться один ингредиент"
         assert bun.price == 130, "Цена должна уменьшиться на цену удаленного ингредиента"
 
     def test_invalid_ingredient(self):
